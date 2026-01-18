@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TraceKit Local UI</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+            padding: 20px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(102, 126, 234, 0.3);
+        }
+
+        .header h1 {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 16px;
+        }
+
+        .status {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            margin-top: 12px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: #22c55e;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: #1e293b;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #334155;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: bold;
+            color: #667eea;
+            margin: 8px 0;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .traces-container {
+            background: #1e293b;
+            border-radius: 8px;
+            border: 1px solid #334155;
+            overflow: hidden;
+        }
+
+        .traces-header {
+            padding: 20px;
+            border-bottom: 1px solid #334155;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .traces-header h2 {
+            font-size: 20px;
+        }
+
+        .clear-btn {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.2s;
+        }
+
+        .clear-btn:hover {
+            background: #dc2626;
+        }
+
+        .traces-list {
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .trace-item {
+            padding: 16px 20px;
+            border-bottom: 1px solid #334155;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.2s;
+        }
+
+        .trace-item:hover {
+            background: #0f172a;
+        }
+
+        .trace-info {
+            flex: 1;
+        }
+
+        .trace-name {
+            font-weight: 600;
+            margin-bottom: 4px;
+            font-size: 16px;
+        }
+
+        .trace-meta {
+            font-size: 13px;
+            color: #94a3b8;
+            display: flex;
+            gap: 16px;
+        }
+
+        .trace-duration {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .duration-fast { color: #22c55e; }
+        .duration-medium { color: #eab308; }
+        .duration-slow { color: #ef4444; }
+
+        .status-badge {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-ok {
+            background: rgba(34, 197, 94, 0.1);
+            color: #22c55e;
+        }
+
+        .status-error {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+        }
+
+        .empty-state {
+            padding: 60px 20px;
+            text-align: center;
+            color: #64748b;
+        }
+
+        .empty-state svg {
+            width: 64px;
+            height: 64px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+        .empty-state h3 {
+            font-size: 18px;
+            margin-bottom: 8px;
+            color: #94a3b8;
+        }
+
+        .empty-state p {
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🚀 TraceKit Local UI</h1>
+        <p>Local debugging without cloud account required</p>
+        <div class="status">
+            <span class="status-dot"></span>
+            <span id="connection-status">Connected</span>
+        </div>
+    </div>
+
+    <div class="stats">
+        <div class="stat-card">
+            <div class="stat-label">Total Traces</div>
+            <div class="stat-value" id="stat-total">0</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Services</div>
+            <div class="stat-value" id="stat-services">0</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Status</div>
+            <div class="stat-value" id="stat-status">Ready</div>
+        </div>
+    </div>
+
+    <div class="traces-container">
+        <div class="traces-header">
+            <h2>Recent Traces</h2>
+            <button class="clear-btn" onclick="clearTraces()">Clear All</button>
+        </div>
+        <div class="traces-list" id="traces-list">
+            <div class="empty-state">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                </svg>
+                <h3>No traces yet</h3>
+                <p>Waiting for your application to send traces...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let ws;
+        let traces = [];
+
+        // Connect to WebSocket
+        function connectWebSocket() {
+            ws = new WebSocket(`ws://${window.location.host}/ws`);
+
+            ws.onopen = () => {
+                console.log('WebSocket connected');
+                document.getElementById('connection-status').textContent = 'Connected';
+            };
+
+            ws.onmessage = (event) => {
+                const message = JSON.parse(event.data);
+
+                if (message.type === 'new_trace') {
+                    addTrace(message.trace);
+                } else if (message.type === 'traces_cleared') {
+                    traces = [];
+                    renderTraces();
+                    updateStats();
+                }
+            };
+
+            ws.onclose = () => {
+                document.getElementById('connection-status').textContent = 'Disconnected';
+                setTimeout(connectWebSocket, 3000); // Reconnect after 3s
+            };
+        }
+
+        // Fetch initial traces
+        async function fetchTraces() {
+            try {
+                const response = await fetch('/api/traces?limit=50');
+                const data = await response.json();
+                traces = data.traces || [];
+                renderTraces();
+                updateStats();
+            } catch (error) {
+                console.error('Error fetching traces:', error);
+            }
+        }
+
+        // Fetch stats
+        async function fetchStats() {
+            try {
+                const response = await fetch('/api/stats');
+                const stats = await response.json();
+                document.getElementById('stat-total').textContent = stats.totalTraces || 0;
+                document.getElementById('stat-services').textContent = stats.services?.length || 0;
+            } catch (error) {
+                console.error('Error fetching stats:', error);
+            }
+        }
+
+        // Add new trace
+        function addTrace(trace) {
+            traces.unshift(trace);
+            if (traces.length > 50) {
+                traces = traces.slice(0, 50);
+            }
+            renderTraces();
+            updateStats();
+        }
+
+        // Render traces
+        function renderTraces() {
+            const container = document.getElementById('traces-list');
+
+            if (traces.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                        </svg>
+                        <h3>No traces yet</h3>
+                        <p>Waiting for your application to send traces...</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = traces.map(trace => `
+                <div class="trace-item">
+                    <div class="trace-info">
+                        <div class="trace-name">${escapeHtml(trace.name || 'Unknown')}</div>
+                        <div class="trace-meta">
+                            <span>🏷️ ${escapeHtml(trace.service || 'unknown')}</span>
+                            <span>🕐 ${formatTime(trace.startTime)}</span>
+                            <span>📍 ${escapeHtml(trace.traceId?.substring(0, 8))}...</span>
+                        </div>
+                    </div>
+                    <div class="trace-duration ${getDurationClass(trace.duration)}">
+                        ${trace.duration}ms
+                    </div>
+                    <div class="status-badge status-${trace.status || 'ok'}">
+                        ${trace.status || 'ok'}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Update stats
+        function updateStats() {
+            fetchStats();
+        }
+
+        // Clear all traces
+        async function clearTraces() {
+            if (!confirm('Clear all traces?')) return;
+
+            try {
+                await fetch('/api/traces', { method: 'DELETE' });
+                traces = [];
+                renderTraces();
+                updateStats();
+            } catch (error) {
+                console.error('Error clearing traces:', error);
+            }
+        }
+
+        // Utility functions
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function formatTime(isoString) {
+            if (!isoString) return 'Unknown';
+            const date = new Date(isoString);
+            return date.toLocaleTimeString();
+        }
+
+        function getDurationClass(duration) {
+            if (duration < 100) return 'duration-fast';
+            if (duration < 500) return 'duration-medium';
+            return 'duration-slow';
+        }
+
+        // Initialize
+        connectWebSocket();
+        fetchTraces();
+        fetchStats();
+
+        // Refresh stats every 5 seconds
+        setInterval(updateStats, 5000);
+    </script>
+</body>
+</html>
