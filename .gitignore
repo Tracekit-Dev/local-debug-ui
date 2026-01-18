@@ -17,8 +17,8 @@ Thumbs.db
 *.swp
 *.swo
 
-# Build outputs
-dist/
+# Build outputs (but keep client/dist for npm package)
+# dist/
 build/
 
 # Environment

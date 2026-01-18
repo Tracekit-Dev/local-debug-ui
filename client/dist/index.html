@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,6 +17,16 @@
             background: #0f172a;
             color: #e2e8f0;
             padding: 20px;
+        }
+
+        .main-container {
+            display: grid;
+            grid-template-columns: 1fr 280px;
+            gap: 20px;
+        }
+
+        .content-area {
+            min-width: 0;
         }
 
         .header {
@@ -57,8 +68,15 @@
         }
 
         @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
         }
 
         .stats {
@@ -163,9 +181,17 @@
             font-size: 14px;
         }
 
-        .duration-fast { color: #22c55e; }
-        .duration-medium { color: #eab308; }
-        .duration-slow { color: #ef4444; }
+        .duration-fast {
+            color: #22c55e;
+        }
+
+        .duration-medium {
+            color: #eab308;
+        }
+
+        .duration-slow {
+            color: #ef4444;
+        }
 
         .status-badge {
             padding: 4px 10px;
@@ -206,8 +232,295 @@
         .empty-state p {
             font-size: 14px;
         }
+
+        /* Sidebar Styles */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .sidebar-card {
+            background: #1e293b;
+            border-radius: 8px;
+            border: 1px solid rgba(148, 163, 184, 0.1);
+            overflow: hidden;
+        }
+
+        .sidebar-card-header {
+            padding: 14px 16px;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .sidebar-card-header h3 {
+            font-size: 14px;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .sidebar-card-header .toggle {
+            font-size: 12px;
+            color: #94a3b8;
+        }
+
+        .sidebar-card-content {
+            padding: 16px;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .sidebar-card-content.collapsed {
+            display: none;
+        }
+
+        .sidebar-card-content a {
+            color: #818cf8;
+            text-decoration: none;
+        }
+
+        .sidebar-card-content a:hover {
+            text-decoration: underline;
+        }
+
+        .sidebar-links {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .sidebar-link {
+            color: #818cf8;
+            text-decoration: none;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .sidebar-link:hover {
+            text-decoration: underline;
+        }
+
+        .upgrade-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            width: 100%;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .upgrade-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+            margin: 12px 0 0 0;
+        }
+
+        .feature-list li {
+            padding: 6px 0;
+            font-size: 12px;
+            color: #cbd5e0;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+
+        .feature-list li:before {
+            content: "✓";
+            color: #22c55e;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .brand-tagline {
+            font-size: 12px;
+            color: #94a3b8;
+            margin-top: 8px;
+        }
+
+        .app-item {
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+        }
+
+        .app-item:last-child {
+            border-bottom: none;
+        }
+
+        .app-item h4 {
+            font-size: 13px;
+            font-weight: 600;
+            margin: 0 0 4px 0;
+        }
+
+        .app-item p {
+            font-size: 12px;
+            color: #94a3b8;
+            margin: 0 0 8px 0;
+        }
+
+        /* Responsive - collapse sidebar to bottom on mobile */
+        @media (max-width: 768px) {
+            .main-container {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                order: 2;
+            }
+
+            .content-area {
+                order: 1;
+            }
+        }
+
+        /* Trace Item Clickable */
+        .trace-item.clickable {
+            cursor: pointer;
+        }
+
+        /* Modal Styles */
+        .trace-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .trace-modal-content {
+            background: #1e293b;
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            border-radius: 12px;
+            border: 1px solid #334155;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            animation: modalSlideUp 0.3s ease-out;
+        }
+
+        @keyframes modalSlideUp {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .trace-modal-header {
+            padding: 20px;
+            border-bottom: 1px solid #334155;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #0f172a;
+        }
+
+        .trace-modal-header h3 {
+            margin: 0;
+            font-size: 18px;
+            color: #e2e8f0;
+        }
+
+        .close-modal-btn {
+            background: transparent;
+            border: none;
+            color: #94a3b8;
+            font-size: 24px;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .close-modal-btn:hover {
+            color: #e2e8f0;
+        }
+
+        .trace-modal-body {
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .detail-section {
+            margin-bottom: 24px;
+        }
+
+        .detail-section h4 {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #94a3b8;
+            margin-bottom: 12px;
+            border-bottom: 1px solid #334155;
+            padding-bottom: 8px;
+        }
+
+        .attributes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 12px;
+        }
+
+        .attr-item {
+            background: rgba(15, 23, 42, 0.5);
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 13px;
+        }
+
+        .attr-key {
+            color: #94a3b8;
+            display: block;
+            margin-bottom: 4px;
+            font-size: 12px;
+        }
+
+        .attr-value {
+            color: #e2e8f0;
+            word-break: break-all;
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Mono', 'Droid Sans Mono', 'Source Code Pro', monospace;
+        }
+
+        .trace-header-large {
+            margin-bottom: 24px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #334155;
+        }
+
+        .trace-title-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
     </style>
 </head>
+
 <body>
     <div class="header">
         <h1>🚀 TraceKit Local UI</h1>
@@ -218,33 +531,144 @@
         </div>
     </div>
 
-    <div class="stats">
-        <div class="stat-card">
-            <div class="stat-label">Total Traces</div>
-            <div class="stat-value" id="stat-total">0</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-label">Services</div>
-            <div class="stat-value" id="stat-services">0</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-label">Status</div>
-            <div class="stat-value" id="stat-status">Ready</div>
-        </div>
-    </div>
+    <div class="main-container">
+        <div class="content-area">
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-label">Total Traces</div>
+                    <div class="stat-value" id="stat-total">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Services</div>
+                    <div class="stat-value" id="stat-services">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Status</div>
+                    <div class="stat-value" id="stat-status">Ready</div>
+                </div>
+            </div>
 
-    <div class="traces-container">
-        <div class="traces-header">
-            <h2>Recent Traces</h2>
-            <button class="clear-btn" onclick="clearTraces()">Clear All</button>
+            <div class="traces-container">
+                <div class="traces-header">
+                    <h2>Recent Traces</h2>
+                    <button class="clear-btn" onclick="clearTraces()">Clear All</button>
+                </div>
+                <div class="traces-list" id="traces-list">
+                    <div class="empty-state">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                        </svg>
+                        <h3>No traces yet</h3>
+                        <p>Waiting for your application to send traces...</p>
+                    </div>
+                </div>
+            </div>
+        </div><!-- Close content-area -->
+
+        <!-- Sidebar -->
+        <div class="sidebar">
+
+            <!-- Featured App / Ads Section (NEW) -->
+            <div class="sidebar-card"
+                style="border: 1px solid #6366f1; background: linear-gradient(180deg, rgba(99, 102, 241, 0.1) 0%, rgba(30, 41, 59, 1) 100%);">
+                <div class="sidebar-card-header">
+                    <h3 style="color: #818cf8; display: flex; align-items: center; gap: 6px;">
+                        <span>★</span> Featured App
+                    </h3>
+                </div>
+                <div class="sidebar-card-content">
+                    <div style="text-align: center; margin-bottom: 12px;">
+                        <div style="font-size: 40px; margin-bottom: 8px;">🚀</div>
+                        <h4 style="color: #e2e8f0; margin-bottom: 6px;">TraceKit Cloud</h4>
+                        <p style="color: #94a3b8; font-size: 12px; margin-bottom: 12px;">
+                            Production monitoring, alerts, and team collaboration.
+                        </p>
+                        <a href="https://tracekit.dev" target="_blank" class="upgrade-btn"
+                            style="text-decoration: none; display: block; text-align: center; color: white;">
+                            Login
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- About Card -->
+            <div class="sidebar-card">
+                <div class="sidebar-card-content">
+                    <div style="text-align: center;">
+                        <div style="font-size: 16px; font-weight: 600; color: #e2e8f0;">
+                            TraceKit Local UI
+                        </div>
+                        <div class="brand-tagline">Development Mode</div>
+                    </div>
+                    <p style="font-size: 12px; color: #94a3b8; margin-top: 12px; line-height: 1.5;">
+                        This is a local debugging interface. For production monitoring, use the cloud platform.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Documentation Card -->
+            <div class="sidebar-card">
+                <div class="sidebar-card-header" onclick="toggleCard(this)">
+                    <h3>Documentation</h3>
+                    <span class="toggle">▼</span>
+                </div>
+                <div class="sidebar-card-content">
+                    <div class="sidebar-links">
+                        <a href="https://app.tracekit.dev/docs" target="_blank" class="sidebar-link">
+                            📚 Documentation
+                        </a>
+                        <a href="https://github.com/TracekitDev" target="_blank" class="sidebar-link">
+                            💻 GitHub
+                        </a>
+                        <a href="https://app.tracekit.dev/docs/languages/python" target="_blank" class="sidebar-link">
+                            Python SDK
+                        </a>
+                        <a href="https://app.tracekit.dev/docs/languages/node" target="_blank" class="sidebar-link">
+                            Node.js SDK
+                        </a>
+                        <a href="https://app.tracekit.dev/docs/languages/go" target="_blank" class="sidebar-link">
+                            Go SDK
+                        </a>
+                        <a href="https://app.tracekit.dev/docs/languages/php" target="_blank" class="sidebar-link">
+                            PHP SDK
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Other Apps Card (placeholder for user's apps) -->
+            <div class="sidebar-card">
+                <div class="sidebar-card-header" onclick="toggleCard(this)">
+                    <h3>More Tools</h3>
+                    <span class="toggle">▶</span>
+                </div>
+                <div class="sidebar-card-content collapsed">
+                    <p style="color: #94a3b8; font-size: 12px; margin-bottom: 12px;">
+                        Other developer tools you might find useful.
+                    </p>
+                    <!-- User can add their apps here -->
+                    <div class="app-item">
+                        <h4>JSON Validatr</h4>
+                        <p>Validate and format JSON instantly.</p>
+                        <a href="#" target="_blank" class="sidebar-link">
+                            Visit →
+                        </a>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="traces-list" id="traces-list">
-            <div class="empty-state">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                </svg>
-                <h3>No traces yet</h3>
-                <p>Waiting for your application to send traces...</p>
+
+        <!-- Trace Details Modal (NEW) -->
+        <div id="trace-modal" class="trace-modal">
+            <div class="trace-modal-content">
+                <div class="trace-modal-header">
+                    <h3>Trace Details</h3>
+                    <button class="close-modal-btn" onclick="closeTraceModal()">×</button>
+                </div>
+                <div class="trace-modal-body" id="trace-modal-content-body">
+                    <!-- Content injected via JS -->
+                </div>
             </div>
         </div>
     </div>
@@ -397,6 +821,125 @@
 
         // Refresh stats every 5 seconds
         setInterval(updateStats, 5000);
+
+        // Sidebar card toggle function
+        function toggleCard(headerElement) {
+            const content = headerElement.nextElementSibling;
+            const toggle = headerElement.querySelector('.toggle');
+
+            if (content.classList.contains('collapsed')) {
+                content.classList.remove('collapsed');
+                toggle.textContent = '▼';
+            } else {
+                content.classList.add('collapsed');
+                toggle.textContent = '▶';
+            }
+        }
+
+        // --- NEW: Trace Details Modal Logic ---
+        function showTraceDetails(index) {
+            const trace = traces[index];
+            if (!trace) return;
+
+            const modal = document.getElementById('trace-modal');
+            const content = document.getElementById('trace-modal-content-body');
+
+            // Format attributes
+            let attributesHtml = '';
+            if (trace.attributes && Object.keys(trace.attributes).length > 0) {
+                attributesHtml = '<div class="detail-section"><h4>Attributes</h4><div class="attributes-grid">';
+                for (const [key, value] of Object.entries(trace.attributes)) {
+                    attributesHtml += `
+                        <div class="attr-item">
+                            <span class="attr-key">${escapeHtml(key)}</span>
+                            <span class="attr-value">${escapeHtml(String(value))}</span>
+                        </div>`;
+                }
+                attributesHtml += '</div></div>';
+            }
+
+            // Format timings
+            const timingsHtml = `
+                <div class="detail-section">
+                    <h4>Timing</h4>
+                    <div class="attributes-grid">
+                        <div class="attr-item"><span class="attr-key">Start</span><span class="attr-value">${trace.startTime}</span></div>
+                        <div class="attr-item"><span class="attr-key">End</span><span class="attr-value">${trace.endTime}</span></div>
+                        <div class="attr-item"><span class="attr-key">Duration</span><span class="attr-value">${trace.duration}ms</span></div>
+                    </div>
+                </div>
+            `;
+
+            content.innerHTML = `
+                <div class="trace-header-large">
+                    <div class="trace-title-row">
+                        <h2 style="margin:0; font-size: 24px;">${escapeHtml(trace.name)}</h2>
+                        <span class="status-badge status-${trace.status || 'ok'}">${trace.status || 'ok'}</span>
+                    </div>
+                    <div class="trace-subtitle" style="color: #94a3b8; margin-top: 8px;">
+                        ${escapeHtml(trace.service)} • ${escapeHtml(trace.kind)} • ${trace.traceId}
+                    </div>
+                </div>
+                ${timingsHtml}
+                ${attributesHtml}
+                <div class="detail-section">
+                    <h4>Raw Data</h4>
+                    <pre style="background: #0f172a; padding: 12px; border-radius: 6px; overflow: auto; font-size: 12px; color: #cbd5e0;">${JSON.stringify(trace, null, 2)}</pre>
+                </div>
+            `;
+
+            modal.style.display = 'flex';
+        }
+
+        function closeTraceModal() {
+            document.getElementById('trace-modal').style.display = 'none';
+        }
+
+        // Close modal on click outside
+        window.onclick = function (event) {
+            const modal = document.getElementById('trace-modal');
+            if (event.target == modal) {
+                closeTraceModal();
+            }
+        }
+
+        // Override renderTraces to make items clickable
+        function renderTraces() {
+            const container = document.getElementById('traces-list');
+
+            if (traces.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                        </svg>
+                        <h3>No traces yet</h3>
+                        <p>Waiting for your application to send traces...</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = traces.map((trace, index) => `
+                <div class="trace-item clickable" onclick="showTraceDetails(${index})">
+                    <div class="trace-info">
+                        <div class="trace-name">${escapeHtml(trace.name || 'Unknown')}</div>
+                        <div class="trace-meta">
+                            <span>🏷️ ${escapeHtml(trace.service || 'unknown')}</span>
+                            <span>🕐 ${formatTime(trace.startTime)}</span>
+                            <span>📍 ${escapeHtml(trace.traceId?.substring(0, 8))}...</span>
+                        </div>
+                    </div>
+                    <div class="trace-duration ${getDurationClass(trace.duration)}">
+                        ${trace.duration}ms
+                    </div>
+                    <div class="status-badge status-${trace.status || 'ok'}">
+                        ${trace.status || 'ok'}
+                    </div>
+                </div>
+            `).join('');
+        }
     </script>
 </body>
+
 </html>
